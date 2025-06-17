@@ -1,0 +1,1092 @@
+<!-- AIzaSyDlxBF87laAjTivTsaO1joL7wVFboPKn5Y -->
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guida Interattiva per Visitatori Italiani negli USA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The SPA is structured as a chronological journey in four phases: "Before You Travel," "At the Airport," "After You Arrive," and "Planning Your Stay." This user-centric flow guides the user step-by-step. A sticky top navigation allows easy access to each phase. Key interactions include two Gemini API-powered generators for a personalized invitation letter and a custom travel itinerary, an interactive tool to clarify the Alien Registration Requirement, and collapsible content sections for detailed information. A language switcher provides full bilingual support. -->
+    <!-- Visualization & Content Choices: Report Info -> Invitation Letter; Goal -> Instruct/Automate; Viz -> Form + Generated Text (HTML/JS); Interaction -> User fills form, clicks a button to trigger Gemini API call, which populates a textarea with a personalized letter; Justification -> Provides a highly practical, ready-to-use tool that automates a key task. | Report Info -> Trip Planning; Goal -> Inspire/Assist; Viz -> Form + Generated Markdown (HTML/JS); Interaction -> User provides interests, clicks a button to trigger Gemini API, which returns a formatted itinerary; Justification -> Adds significant value beyond the core immigration topic, making the app a more comprehensive travel assistant. | Report Info -> Alien Registration Requirement (ARR); Goal -> Clarify/Decide; Viz -> Interactive "Do I Need to Register?" module (HTML/JS); Interaction -> User clicks a button that reveals the definitive answer for their specific case; Justification -> Directly resolves the core point of confusion. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8f7f4;
+        color: #333333;
+      }
+      .bg-primary {
+        background-color: #f8f7f4;
+      }
+      .bg-secondary {
+        background-color: #ffffff;
+      }
+      .text-header {
+        color: #6b7a8f;
+      }
+      .text-body {
+        color: #333333;
+      }
+      .accent-color {
+        background-color: #d57a66;
+      }
+      .accent-text {
+        color: #d57a66;
+      }
+      .accent-border {
+        border-color: #d57a66;
+      }
+      .nav-link {
+        transition: color 0.3s, border-bottom-color 0.3s;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: #d57a66;
+        border-bottom-color: #d57a66;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -2px rgb(0 0 0 / 0.1);
+      }
+      .step-indicator {
+        background-color: #6b7a8f;
+        color: white;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 9999px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 700;
+        font-size: 1.25rem;
+      }
+      .step-line {
+        width: 2px;
+        background-color: #6b7a8f;
+        flex-grow: 1;
+      }
+      .collapsible-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out;
+      }
+      .collapsible-content.show {
+        max-height: 1000px; /* Adjust as needed */
+      }
+      .clarifier-btn {
+        background-color: #6b7a8f;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .clarifier-btn:hover {
+        background-color: #5a6a7f;
+      }
+      .gemini-btn {
+        background-color: #d57a66;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .gemini-btn:hover {
+        background-color: #c46a55;
+      }
+      .clarifier-result {
+        border-left-width: 4px;
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+      .clarifier-result.no {
+        border-color: #22c55e;
+        background-color: #f0fdf4;
+      }
+      .loader {
+        border: 4px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 4px solid #6b7a8f;
+        width: 32px;
+        height: 32px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      [data-translate-key] {
+        transition: opacity 0.3s ease-in-out;
+      }
+    </style>
+  </head>
+  <body class="bg-primary text-body">
+    <header class="bg-secondary sticky top-0 z-50 shadow-md">
+      <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex-shrink-0">
+            <h1
+              class="text-xl font-bold text-header"
+              data-translate-key="guideTitle"
+            >
+              Guida Viaggio USA
+            </h1>
+          </div>
+          <div class="hidden md:flex items-center">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <a
+                href="#prima-di-partire"
+                class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent"
+                data-translate-key="navPhase1"
+                >Prima di Partire</a
+              >
+              <a
+                href="#in-aeroporto"
+                class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent"
+                data-translate-key="navPhase2"
+                >In Aeroporto</a
+              >
+              <a
+                href="#dopo-arrivo"
+                class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent"
+                data-translate-key="navPhase3"
+                >Dopo l'Arrivo</a
+              >
+              <a
+                href="#organizzare-soggiorno"
+                class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent"
+                data-translate-key="navPhase4"
+                >Organizza Soggiorno</a
+              >
+            </div>
+            <button
+              id="lang-switcher"
+              class="ml-8 text-sm font-semibold text-gray-600 hover:text-accent-text p-2 border rounded-md"
+            >
+              IT / EN
+            </button>
+          </div>
+          <div class="md:hidden flex items-center">
+            <button
+              id="lang-switcher-mobile"
+              class="mr-2 text-sm font-semibold text-gray-600 hover:text-accent-text p-2 border rounded-md"
+            >
+              IT / EN
+            </button>
+            <button
+              id="mobile-menu-button"
+              class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"
+            >
+              <svg
+                class="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+              <svg
+                class="hidden h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div class="md:hidden hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <a
+            href="#prima-di-partire"
+            class="nav-link block px-3 py-2 rounded-md text-base font-medium"
+            data-translate-key="navPhase1Mobile"
+            >Prima di Partire</a
+          >
+          <a
+            href="#in-aeroporto"
+            class="nav-link block px-3 py-2 rounded-md text-base font-medium"
+            data-translate-key="navPhase2Mobile"
+            >In Aeroporto</a
+          >
+          <a
+            href="#dopo-arrivo"
+            class="nav-link block px-3 py-2 rounded-md text-base font-medium"
+            data-translate-key="navPhase3Mobile"
+            >Dopo l'Arrivo</a
+          >
+          <a
+            href="#organizzare-soggiorno"
+            class="nav-link block px-3 py-2 rounded-md text-base font-medium"
+            data-translate-key="navPhase4Mobile"
+            >Organizza Soggiorno</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <section class="text-center mb-16">
+        <h1
+          class="text-4xl md:text-5xl font-bold text-header mb-4"
+          data-translate-key="mainHeader"
+        >
+          Il Vostro Viaggio negli Stati Uniti
+        </h1>
+        <p
+          class="max-w-3xl mx-auto text-lg text-gray-600"
+          data-translate-key="mainSubheader"
+        >
+          Una guida interattiva potenziata da AI per i cittadini italiani che
+          visitano gli USA con il Programma Viaggio senza Visto (VWP).
+        </p>
+      </section>
+
+      <!-- Section 1: Prima di Partire -->
+      <section id="prima-di-partire" class="mb-16 scroll-mt-20">
+        <h2
+          class="text-3xl font-bold text-header mb-8 text-center"
+          data-translate-key="phase1Header"
+        >
+          Fase 1: Prima di Partire
+        </h2>
+        <div class="max-w-4xl mx-auto space-y-8">
+          <div class="card p-6 md:p-8">
+            <div class="flex items-center mb-4">
+              <span class="step-indicator">1</span>
+              <h3
+                class="text-2xl font-bold ml-4 text-header"
+                data-translate-key="step1_1_title"
+              >
+                Ottenere l'Autorizzazione ESTA
+              </h3>
+            </div>
+            <p class="mb-4" data-translate-key="step1_1_desc">
+              Obbligatoria per l'imbarco. Richiedetela almeno 72 ore prima del
+              volo sul sito ufficiale
+              <a
+                href="https://esta.cbp.dhs.gov"
+                target="_blank"
+                class="accent-text font-semibold hover:underline"
+                >esta.cbp.dhs.gov</a
+              >.
+            </p>
+          </div>
+
+          <div class="card p-6 md:p-8">
+            <div class="flex items-center mb-4">
+              <span class="step-indicator">2</span>
+              <h3
+                class="text-2xl font-bold ml-4 text-header"
+                data-translate-key="step1_2_title"
+              >
+                Controllare i Documenti di Viaggio
+              </h3>
+            </div>
+            <p class="mb-4" data-translate-key="step1_2_desc">
+              Assicuratevi di avere un passaporto elettronico valido e un
+              biglietto aereo di ritorno.
+            </p>
+          </div>
+
+          <div class="card p-6 md:p-8">
+            <div class="flex items-center mb-4">
+              <span class="step-indicator">3</span>
+              <h3
+                class="text-2xl font-bold ml-4 text-header"
+                data-translate-key="step1_3_title"
+              >
+                Preparare un Portfolio di Documenti
+              </h3>
+            </div>
+            <div class="space-y-4">
+              <button
+                class="collapsible-trigger w-full text-left font-semibold text-lg p-4 bg-gray-100 rounded-md flex justify-between items-center hover:bg-gray-200 transition"
+              >
+                <span data-translate-key="letterGeneratorTitle"
+                  >✨ Generatore Lettera di Invito</span
+                ><span class="transform transition-transform duration-300"
+                  >▼</span
+                >
+              </button>
+              <div class="collapsible-content">
+                <div class="p-4 border border-t-0 rounded-b-md bg-gray-50">
+                  <p class="mb-4" data-translate-key="letterGeneratorDesc">
+                    Questo strumento AI vi aiuta a creare una lettera di invito
+                    personalizzata per tutta la famiglia (genitori, sorella e
+                    cognato). I campi sono pre-compilati con i vostri dati.
+                  </p>
+                  <form id="letter-form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <input
+                        type="text"
+                        id="host-name"
+                        value="Angelo Raimondi"
+                        class="p-2 border rounded"
+                        required
+                        data-translate-key="hostNamePlaceholder"
+                        placeholder="Nome di chi ospita"
+                      />
+                      <input
+                        type="text"
+                        id="parent1-name"
+                        value="Giuseppe Raimondi"
+                        class="p-2 border rounded"
+                        required
+                        data-translate-key="parent1NamePlaceholder"
+                        placeholder="Nome Genitore 1"
+                      />
+                      <input
+                        type="text"
+                        id="parent2-name"
+                        value="Loriana Valbruccioli"
+                        class="p-2 border rounded"
+                        data-translate-key="parent2NamePlaceholder"
+                        placeholder="Nome Genitore 2 (opzionale)"
+                      />
+                      <div>
+                        <label
+                          class="text-sm text-gray-600"
+                          data-translate-key="arrivalDateLabel"
+                          >Data di Arrivo:</label
+                        ><input
+                          type="date"
+                          id="arrival-date"
+                          value="2025-06-27"
+                          class="w-full p-2 border rounded"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label
+                          class="text-sm text-gray-600"
+                          data-translate-key="departureDateLabel"
+                          >Data di Partenza (dagli USA):</label
+                        ><input
+                          type="date"
+                          id="departure-date"
+                          value="2025-08-04"
+                          class="w-full p-2 border rounded"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      class="gemini-btn w-full"
+                      data-translate-key="generateLetterBtn"
+                    >
+                      ✨ Genera Lettera Personalizzata
+                    </button>
+                  </form>
+                  <div
+                    id="letter-loader"
+                    class="hidden justify-center items-center mt-4"
+                  >
+                    <div class="loader"></div>
+                  </div>
+                  <div id="letter-output" class="hidden mt-4">
+                    <textarea
+                      id="letter-result"
+                      rows="12"
+                      class="w-full p-2 border rounded bg-white"
+                    ></textarea>
+                    <button
+                      id="copy-letter-btn"
+                      class="clarifier-btn mt-2"
+                      data-translate-key="copyTextBtn"
+                    >
+                      Copia Testo
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                class="collapsible-trigger w-full text-left font-semibold text-lg p-4 bg-gray-100 rounded-md flex justify-between items-center hover:bg-gray-200 transition"
+              >
+                <span data-translate-key="tiesToBrazilTitle"
+                  >Prova di Legami con il Brasile</span
+                ><span class="transform transition-transform duration-300"
+                  >▼</span
+                >
+              </button>
+              <div class="collapsible-content">
+                <div class="p-4 border border-t-0 rounded-b-md bg-gray-50">
+                  <p data-translate-key="tiesToBrazilDesc">
+                    Documenti che dimostrano l'intenzione di tornare in Brasile
+                    (prove di lavoro autonomo, attività musicali, etc.).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: In Aeroporto -->
+      <section id="in-aeroporto" class="mb-16 scroll-mt-20">
+        <h2
+          class="text-3xl font-bold text-header mb-8 text-center"
+          data-translate-key="phase2Header"
+        >
+          Fase 2: All'Arrivo in Aeroporto
+        </h2>
+        <div class="max-w-4xl mx-auto">
+          <div class="relative pl-8 md:pl-12">
+            <div class="flex items-start mb-8">
+              <div class="absolute left-0 flex flex-col items-center">
+                <div class="step-indicator">1</div>
+                <div class="step-line mt-2"></div>
+              </div>
+              <div class="ml-4 md:ml-8">
+                <h4
+                  class="font-bold text-xl mb-2 text-header"
+                  data-translate-key="step2_1_title"
+                >
+                  Controllo Primario
+                </h4>
+                <p data-translate-key="step2_1_desc">
+                  Presentate il passaporto, vi faranno una foto e prenderanno le
+                  impronte. Rispondete con calma alle domande dell'agente CBP.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="absolute left-0 flex flex-col items-center h-full">
+                <div class="step-indicator">2</div>
+              </div>
+              <div class="ml-4 md:ml-8">
+                <h4
+                  class="font-bold text-xl mb-2 text-header"
+                  data-translate-key="step2_2_title"
+                >
+                  Rilascio del Modulo I-94 Elettronico
+                </h4>
+                <p data-translate-key="step2_2_desc">
+                  L'agente timbrerà il passaporto. Il vostro modulo I-94
+                  elettronico, la prova di ingresso legale, viene creato
+                  automaticamente.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Dopo l'Arrivo -->
+      <section id="dopo-arrivo" class="mb-16 scroll-mt-20">
+        <h2
+          class="text-3xl font-bold text-header mb-8 text-center"
+          data-translate-key="phase3Header"
+        >
+          Fase 3: Dopo l'Arrivo
+        </h2>
+        <div class="max-w-4xl mx-auto space-y-8">
+          <div class="card p-6 md:p-8">
+            <h3
+              class="text-2xl font-bold mb-4 text-header"
+              data-translate-key="arrClarificationTitle"
+            >
+              Chiarimento sull'Obbligo di Registrazione (ARR)
+            </h3>
+            <div class="text-center bg-gray-50 p-6 rounded-lg">
+              <p
+                class="text-lg font-semibold mb-4"
+                data-translate-key="arrQuestion"
+              >
+                I visitatori con VWP (ESTA) devono registrarsi con il modulo
+                G-325R per soggiorni >30 giorni?
+              </p>
+              <button
+                id="clarifier-button"
+                class="clarifier-btn"
+                data-translate-key="clarifierBtn"
+              >
+                Clicca per la risposta
+              </button>
+              <div id="clarifier-result" class="hidden text-left mt-4"></div>
+            </div>
+          </div>
+          <div class="card p-6 md:p-8">
+            <h3
+              class="text-2xl font-bold mb-4 text-header"
+              data-translate-key="complianceTitle"
+            >
+              I Vostri Doveri di Conformità
+            </h3>
+            <div class="space-y-6">
+              <div>
+                <h4
+                  class="font-semibold text-lg"
+                  data-translate-key="duty1Title"
+                >
+                  1. Recuperare il Modulo I-94
+                </h4>
+                <p data-translate-key="duty1Desc">
+                  Poco dopo l'arrivo, scaricate e stampate il vostro I-94 da
+                  <a
+                    href="https://i94.cbp.dhs.gov"
+                    target="_blank"
+                    class="accent-text font-semibold hover:underline"
+                    >i94.cbp.dhs.gov</a
+                  >.
+                </p>
+              </div>
+              <div>
+                <h4
+                  class="font-semibold text-lg"
+                  data-translate-key="duty2Title"
+                >
+                  2. Portare la Prova di Registrazione
+                </h4>
+                <p data-translate-key="duty2Desc">
+                  La copia stampata del vostro I-94 funge da prova di
+                  registrazione. Tenetela sempre con il passaporto.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Organizzare il Soggiorno -->
+      <section id="organizzare-soggiorno" class="scroll-mt-20">
+        <h2
+          class="text-3xl font-bold text-header mb-8 text-center"
+          data-translate-key="phase4Header"
+        >
+          Fase 4: Organizzare il Soggiorno
+        </h2>
+        <div class="max-w-4xl mx-auto">
+          <div class="card p-6 md:p-8">
+            <h3
+              class="text-2xl font-bold mb-4 text-header"
+              data-translate-key="itineraryPlannerTitle"
+            >
+              ✨ Pianificatore di Itinerari AI
+            </h3>
+            <p class="mb-6" data-translate-key="itineraryPlannerDesc">
+              Non sapete da dove iniziare? Inserite la città che visiterete e
+              gli interessi della vostra famiglia. L'AI suggerirà un itinerario
+              personalizzato.
+            </p>
+            <form id="itinerary-form">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input
+                  type="text"
+                  id="city-name"
+                  value="Chicago / Valparaiso, IN"
+                  class="p-2 border rounded"
+                  required
+                  data-translate-key="destinationCityPlaceholder"
+                  placeholder="Città di destinazione"
+                />
+                <input
+                  type="text"
+                  id="trip-length"
+                  value="Circa 40 giorni"
+                  class="p-2 border rounded"
+                  required
+                  data-translate-key="tripLengthPlaceholder"
+                  placeholder="Durata del viaggio"
+                />
+              </div>
+              <div class="mb-4">
+                <textarea
+                  id="interests"
+                  rows="3"
+                  class="w-full p-2 border rounded"
+                  required
+                  data-translate-key="interestsPlaceholder"
+                  placeholder="Interessi (es. musica, piano, arte, passeggiate)"
+                >
+Genitori (lavoratori autonomi), sorella (pianista), cognato (musicista). Interessi: musica, arte, passeggiate tranquille, buona cucina.</textarea
+                >
+              </div>
+              <button
+                type="submit"
+                class="gemini-btn w-full"
+                data-translate-key="createItineraryBtn"
+              >
+                ✨ Crea Itinerario Suggerito
+              </button>
+            </form>
+            <div
+              id="itinerary-loader"
+              class="hidden justify-center items-center mt-4"
+            >
+              <div class="loader"></div>
+            </div>
+            <div
+              id="itinerary-result"
+              class="hidden mt-4 p-4 bg-gray-50 rounded-lg prose max-w-none"
+            ></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-secondary mt-16">
+      <div
+        class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-gray-500"
+      >
+        <p data-translate-key="footerText">
+          &copy; 2025 Guida Interattiva. Non è consulenza legale. Fare
+          riferimento ai siti ufficiali USA.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let currentLang = "it";
+
+        const translations = {
+          it: {
+            guideTitle: "Guida Viaggio USA",
+            navPhase1: "Prima di Partire",
+            navPhase2: "In Aeroporto",
+            navPhase3: "Dopo l'Arrivo",
+            navPhase4: "Organizza Soggiorno",
+            navPhase1Mobile: "Prima di Partire",
+            navPhase2Mobile: "In Aeroporto",
+            navPhase3Mobile: "Dopo l'Arrivo",
+            navPhase4Mobile: "Organizza Soggiorno",
+            mainHeader: "Il Vostro Viaggio negli Stati Uniti",
+            mainSubheader:
+              "Una guida interattiva potenziata da AI per i cittadini italiani che visitano gli USA con il Programma Viaggio senza Visto (VWP).",
+            phase1Header: "Fase 1: Prima di Partire",
+            step1_1_title: "Ottenere l'Autorizzazione ESTA",
+            step1_1_desc:
+              "Obbligatoria per l'imbarco. Richiedetela almeno 72 ore prima del volo sul sito ufficiale <a href='https://esta.cbp.dhs.gov' target='_blank' class='accent-text font-semibold hover:underline'>esta.cbp.dhs.gov</a>.",
+            step1_2_title: "Controllare i Documenti di Viaggio",
+            step1_2_desc:
+              "Assicuratevi di avere un passaporto elettronico valido e un biglietto aereo di ritorno.",
+            step1_3_title: "Preparare un Portfolio di Documenti",
+            letterGeneratorTitle: "✨ Generatore Lettera di Invito",
+            letterGeneratorDesc:
+              "Questo strumento AI vi aiuta a creare una lettera di invito personalizzata per tutta la famiglia (genitori, sorella e cognato). I campi sono pre-compilati con i vostri dati.",
+            hostNamePlaceholder: "Nome di chi ospita",
+            parent1NamePlaceholder: "Nome Genitore 1",
+            parent2NamePlaceholder: "Nome Genitore 2 (opzionale)",
+            arrivalDateLabel: "Data di Arrivo:",
+            departureDateLabel: "Data di Partenza (dagli USA):",
+            generateLetterBtn: "✨ Genera Lettera Personalizzata",
+            copyTextBtn: "Copia Testo",
+            tiesToBrazilTitle: "Prova di Legami con il Brasile",
+            tiesToBrazilDesc:
+              "Documenti che dimostrano l'intenzione di tornare in Brasile (prove di lavoro autonomo, attività musicali, etc.).",
+            phase2Header: "Fase 2: All'Arrivo in Aeroporto",
+            step2_1_title: "Controllo Primario",
+            step2_1_desc:
+              "Presentate il passaporto, vi faranno una foto e prenderanno le impronte. Rispondete con calma alle domande dell'agente CBP.",
+            step2_2_title: "Rilascio del Modulo I-94 Elettronico",
+            step2_2_desc:
+              "L'agente timbrerà il passaporto. Il vostro modulo I-94 elettronico, la prova di ingresso legale, viene creato automaticamente.",
+            phase3Header: "Fase 3: Dopo l'Arrivo",
+            arrClarificationTitle:
+              "Chiarimento sull'Obbligo di Registrazione (ARR)",
+            arrQuestion:
+              "I visitatori con VWP (ESTA) devono registrarsi con il modulo G-325R per soggiorni >30 giorni?",
+            clarifierBtn: "Clicca per la risposta",
+            arrAnswer: `<h4 class="font-bold text-xl mb-2 text-green-800">NO.</h4><p class="text-green-700">I vostri familiari <strong>NON</strong> devono registrarsi con il modulo G-325R. Il motivo è che, entrando in aereo con il programma VWP, ricevono automaticamente un <strong>modulo I-94 elettronico</strong>. Questo I-94 è la loro registrazione ufficiale.</p>`,
+            complianceTitle: "I Vostri Doveri di Conformità",
+            duty1Title: "1. Recuperare il Modulo I-94",
+            duty1Desc:
+              "Poco dopo l'arrivo, scaricate e stampate il vostro I-94 da <a href='https://i94.cbp.dhs.gov' target='_blank' class='accent-text font-semibold hover:underline'>i94.cbp.dhs.gov</a>.",
+            duty2Title: "2. Portare la Prova di Registrazione",
+            duty2Desc:
+              "La copia stampata del vostro I-94 funge da prova di registrazione. Tenetela sempre con il passaporto.",
+            phase4Header: "Fase 4: Organizzare il Soggiorno",
+            itineraryPlannerTitle: "✨ Pianificatore di Itinerari AI",
+            itineraryPlannerDesc:
+              "Non sapete da dove iniziare? Inserite la città che visiterete e gli interessi della vostra famiglia. L'AI suggerirà un itinerario personalizzato.",
+            destinationCityPlaceholder: "Città di destinazione",
+            tripLengthPlaceholder: "Durata del viaggio",
+            interestsPlaceholder:
+              "Interessi (es. musica, piano, arte, passeggiate)",
+            createItineraryBtn: "✨ Crea Itinerario Suggerito",
+            footerText:
+              "&copy; 2025 Guida Interattiva. Non è consulenza legale. Fare riferimento ai siti ufficiali USA.",
+            letterPrompt: `Generate a formal invitation letter in English for a US Customs and Border Protection officer. The host is Angelo Raimondi (Software Engineer) and his wife is Cintia (Safety Engineer). The letter is for four family members visiting from Brazil: his parents, Giuseppe Raimondi and Loriana Valbruccioli (both lightly self-employed), his sister, Gloria Raimondi (a pianist and owner of a Piano Institute), and her husband, Islan Santos (a professional musician). They will all be staying at the host's home at 483 Ashford LN, Valparaiso, IN, 46385. The visit is from {{arrivalDate}} to {{departureDate}}. The tone should be polite and clear. The letter must strongly emphasize the visitors' professional and family ties to Brazil to demonstrate their solid non-immigrant intent.`,
+            itineraryPrompt: `Create a relaxed, day-by-day travel itinerary in Italian for a family group visiting the {{city}} area for {{length}}. The group consists of parents who are self-employed, a sister who is a pianist, and a brother-in-law who is a professional musician. Their interests are: {{interests}}. The tone should be helpful and friendly. Focus on accessible activities, include rest periods, suggest relevant musical venues or events, and recommend good restaurants. Format the output with Markdown, using headings for each day.`,
+          },
+          en: {
+            guideTitle: "USA Travel Guide",
+            navPhase1: "Before You Travel",
+            navPhase2: "At the Airport",
+            navPhase3: "After Arrival",
+            navPhase4: "Plan Your Stay",
+            navPhase1Mobile: "Before You Travel",
+            navPhase2Mobile: "At the Airport",
+            navPhase3Mobile: "After Arrival",
+            navPhase4Mobile: "Plan Your Stay",
+            mainHeader: "Your Trip to the United States",
+            mainSubheader:
+              "An AI-powered interactive guide for Italian citizens visiting the USA under the Visa Waiver Program (VWP).",
+            phase1Header: "Phase 1: Before You Travel",
+            step1_1_title: "Obtain ESTA Authorization",
+            step1_1_desc:
+              "Mandatory for boarding. Apply at least 72 hours before your flight on the official website <a href='https://esta.cbp.dhs.gov' target='_blank' class='accent-text font-semibold hover:underline'>esta.cbp.dhs.gov</a>.",
+            step1_2_title: "Check Travel Documents",
+            step1_2_desc:
+              "Ensure you have a valid electronic passport and a round-trip airline ticket.",
+            step1_3_title: "Prepare a Document Portfolio",
+            letterGeneratorTitle: "✨ Invitation Letter Generator",
+            letterGeneratorDesc:
+              "This AI tool helps you create a personalized invitation letter for the entire family (parents, sister, and brother-in-law). The fields are pre-filled with your data.",
+            hostNamePlaceholder: "Host's Name",
+            parent1NamePlaceholder: "Parent 1's Name",
+            parent2NamePlaceholder: "Parent 2's Name (optional)",
+            arrivalDateLabel: "Arrival Date:",
+            departureDateLabel: "Departure Date (from the US):",
+            generateLetterBtn: "✨ Generate Personalized Letter",
+            copyTextBtn: "Copy Text",
+            tiesToBrazilTitle: "Proof of Ties to Brazil",
+            tiesToBrazilDesc:
+              "Documents demonstrating the intention to return to Brazil (proof of self-employment, musical activities, etc.).",
+            phase2Header: "Phase 2: Upon Airport Arrival",
+            step2_1_title: "Primary Inspection",
+            step2_1_desc:
+              "Present your passport, you will have your photo taken and fingerprints scanned. Calmly answer the CBP officer's questions.",
+            step2_2_title: "Issuance of Electronic Form I-94",
+            step2_2_desc:
+              "The officer will stamp your passport. Your electronic Form I-94, proof of legal entry, is created automatically.",
+            phase3Header: "Phase 3: After Arrival",
+            arrClarificationTitle:
+              "Clarification on the Alien Registration Requirement (ARR)",
+            arrQuestion:
+              "Do visitors on VWP (ESTA) need to register with Form G-325R for stays longer than 30 days?",
+            clarifierBtn: "Click for the answer",
+            arrAnswer: `<h4 class="font-bold text-xl mb-2 text-green-800">NO.</h4><p class="text-green-700">Your family members do <strong>NOT</strong> need to register with Form G-325R. The reason is that upon entering by air under the VWP, they automatically receive an <strong>electronic Form I-94</strong>. This I-94 is their official registration.</p>`,
+            complianceTitle: "Your Compliance Duties",
+            duty1Title: "1. Retrieve Form I-94",
+            duty1Desc:
+              "Shortly after arrival, download and print your I-94 from <a href='https://i94.cbp.dhs.gov' target='_blank' class='accent-text font-semibold hover:underline'>i94.cbp.dhs.gov</a>.",
+            duty2Title: "2. Carry Proof of Registration",
+            duty2Desc:
+              "The printed copy of your I-94 serves as proof of registration. Keep it with your passport at all times.",
+            phase4Header: "Phase 4: Plan Your Stay",
+            itineraryPlannerTitle: "✨ AI Itinerary Planner",
+            itineraryPlannerDesc:
+              "Don't know where to start? Enter the city you'll be visiting and your family's interests. The AI will suggest a personalized itinerary.",
+            destinationCityPlaceholder: "Destination city",
+            tripLengthPlaceholder: "Trip duration",
+            interestsPlaceholder:
+              "Interests (e.g., music, piano, art, quiet walks)",
+            createItineraryBtn: "✨ Create Suggested Itinerary",
+            footerText:
+              "&copy; 2025 Interactive Guide. This is not legal advice. Please refer to official U.S. government websites.",
+            letterPrompt: `Generate a formal invitation letter in English for a US Customs and Border Protection officer. The host is Angelo Raimondi (Software Engineer) and his wife is Cintia (Safety Engineer). The letter is for four family members visiting from Brazil: his parents, Giuseppe Raimondi and Loriana Valbruccioli (both lightly self-employed), his sister, Gloria Raimondi (a pianist and owner of a Piano Institute), and her husband, Islan Santos (a professional musician). They will all be staying at the host's home at 483 Ashford LN, Valparaiso, IN, 46385. The visit is from {{arrivalDate}} to {{departureDate}}. The tone should be polite and clear. The letter must strongly emphasize the visitors' professional and family ties to Brazil to demonstrate their solid non-immigrant intent.`,
+            itineraryPrompt: `Create a relaxed, day-by-day travel itinerary in English for a family group visiting the {{city}} area for {{length}}. The group consists of parents who are self-employed, a sister who is a pianist, and a brother-in-law who is a professional musician. Their interests are: {{interests}}. The tone should be helpful and friendly. Focus on accessible activities, include rest periods, suggest relevant musical venues or events, and recommend good restaurants. Format the output with Markdown, using headings for each day.`,
+          },
+        };
+
+        function switchLanguage(lang) {
+          currentLang = lang;
+          document.documentElement.lang = lang;
+          document.querySelectorAll("[data-translate-key]").forEach((el) => {
+            const key = el.dataset.translateKey;
+            const translation = translations[lang][key];
+            if (translation) {
+              if (el.hasAttribute("placeholder")) {
+                el.placeholder = translation;
+              } else {
+                el.innerHTML = translation;
+              }
+            }
+          });
+          // Reset ARR clarifier on language switch
+          document.getElementById("clarifier-result").classList.add("hidden");
+        }
+
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+          mobileMenuButton
+            .querySelectorAll("svg")
+            .forEach((svg) => svg.classList.toggle("hidden"));
+        });
+
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          link.addEventListener("click", () => {
+            if (window.innerWidth < 768) mobileMenu.classList.add("hidden");
+          });
+        });
+
+        const sections = document.querySelectorAll("main section");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                document.querySelectorAll(".nav-link").forEach((link) => {
+                  link.classList.remove("active");
+                  if (
+                    link.getAttribute("href").substring(1) === entry.target.id
+                  )
+                    link.classList.add("active");
+                });
+              }
+            });
+          },
+          { rootMargin: "-50% 0px -50% 0px" }
+        );
+        sections.forEach((section) => observer.observe(section));
+
+        document.querySelectorAll(".collapsible-trigger").forEach((trigger) => {
+          trigger.addEventListener("click", () => {
+            const content = trigger.nextElementSibling;
+            content.classList.toggle("show");
+            trigger
+              .querySelector("span:last-child")
+              .classList.toggle("rotate-180");
+          });
+        });
+
+        document
+          .getElementById("clarifier-button")
+          .addEventListener("click", () => {
+            const resultDiv = document.getElementById("clarifier-result");
+            resultDiv.innerHTML = translations[currentLang].arrAnswer;
+            resultDiv.className = "clarifier-result no";
+          });
+
+        document
+          .getElementById("lang-switcher")
+          .addEventListener("click", () => {
+            switchLanguage(currentLang === "it" ? "en" : "it");
+          });
+        document
+          .getElementById("lang-switcher-mobile")
+          .addEventListener("click", () => {
+            switchLanguage(currentLang === "it" ? "en" : "it");
+          });
+
+        function formatApiResponse(text) {
+          return text
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*(.*?)\*/g, "<em>$1</em>")
+            .replace(/\n/g, "<br>");
+        }
+
+        async function callGemini(prompt) {
+          // The URL now points to our own Netlify Function
+          const apiUrl = `/api/callGemini`;
+          const payload = { prompt: prompt };
+          let response;
+
+          try {
+            response = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+          } catch (networkError) {
+            console.error(
+              "Network error calling Netlify function:",
+              networkError
+            );
+            throw new Error(
+              translations[currentLang]?.networkErrorText ||
+                `Network connection failed: ${networkError.message}. Please check your internet and try again.`
+            );
+          }
+
+          if (!response.ok) {
+            let detailedErrorMessage = `Function call failed with status ${response.status}`;
+            if (response.statusText) {
+              detailedErrorMessage += `: ${response.statusText}`;
+            }
+
+            try {
+              const errorBodyText = await response.text();
+              if (errorBodyText) {
+                try {
+                  const errorJson = JSON.parse(errorBodyText);
+                  if (errorJson && errorJson.error) {
+                    detailedErrorMessage = errorJson.error;
+                  } else {
+                    detailedErrorMessage = errorBodyText.substring(0, 200); // Limit length for display
+                  }
+                } catch (parseError) {
+                  detailedErrorMessage = errorBodyText.substring(0, 200);
+                }
+              }
+            } catch (bodyError) {
+              // If reading the body fails, we stick with the status code/text
+              console.warn("Could not read error response body:", bodyError);
+            }
+            console.error(
+              "Error from Netlify function. Status:",
+              response.status,
+              "Final Error Message:",
+              detailedErrorMessage
+            );
+            throw new Error(detailedErrorMessage);
+          }
+
+          const result = await response.json();
+
+          if (result.error) {
+            console.error(
+              "API returned an error in a 200 OK response:",
+              result.error
+            );
+            throw new Error(
+              typeof result.error === "string"
+                ? result.error
+                : JSON.stringify(result.error)
+            );
+          }
+
+          if (
+            result.candidates &&
+            result.candidates.length > 0 &&
+            result.candidates[0].content &&
+            result.candidates[0].content.parts &&
+            result.candidates[0].content.parts.length > 0
+          ) {
+            return result.candidates[0].content.parts[0].text;
+          } else {
+            console.error(
+              "Unexpected API response structure (no candidates/parts):",
+              result
+            );
+            // Check if Google API returned an error structure within a 200 OK that was missed
+            if (result.error && result.error.message) {
+              throw new Error(result.error.message);
+            }
+            throw new Error(
+              translations[currentLang]?.noContentErrorText ||
+                "No valid content found in API response. The response structure was unexpected."
+            );
+          }
+        }
+
+        const letterForm = document.getElementById("letter-form");
+        letterForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const arrivalDate = document.getElementById("arrival-date").value;
+          const departureDate = document.getElementById("departure-date").value;
+
+          let prompt = translations.en.letterPrompt // Always generate letter in English
+            .replace("{{arrivalDate}}", arrivalDate)
+            .replace("{{departureDate}}", departureDate);
+
+          const loader = document.getElementById("letter-loader");
+          const outputDiv = document.getElementById("letter-output");
+          const resultTextarea = document.getElementById("letter-result");
+
+          loader.style.display = "flex";
+          outputDiv.style.display = "none";
+
+          try {
+            const result = await callGemini(prompt);
+            resultTextarea.value = result;
+            outputDiv.style.display = "block";
+          } catch (error) {
+            resultTextarea.value = `An error occurred: ${error.message}. Please try again later.`;
+            outputDiv.style.display = "block";
+          } finally {
+            loader.style.display = "none";
+          }
+        });
+
+        document
+          .getElementById("copy-letter-btn")
+          .addEventListener("click", () => {
+            const textarea = document.getElementById("letter-result");
+            textarea.select();
+            try {
+              document.execCommand("copy");
+              alert(
+                currentLang === "it"
+                  ? "Testo copiato negli appunti!"
+                  : "Text copied to clipboard!"
+              );
+            } catch (err) {
+              alert(
+                currentLang === "it"
+                  ? "Impossibile copiare il testo. Si prega di farlo manualmente."
+                  : "Could not copy text. Please do so manually."
+              );
+            }
+          });
+
+        const itineraryForm = document.getElementById("itinerary-form");
+        itineraryForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const city = document.getElementById("city-name").value;
+          const length = document.getElementById("trip-length").value;
+          const interests = document.getElementById("interests").value;
+
+          let prompt = translations[currentLang].itineraryPrompt
+            .replace("{{city}}", city)
+            .replace("{{length}}", length)
+            .replace("{{interests}}", interests);
+
+          const loader = document.getElementById("itinerary-loader");
+          const resultDiv = document.getElementById("itinerary-result");
+
+          loader.style.display = "flex";
+          resultDiv.style.display = "none";
+
+          try {
+            const result = await callGemini(prompt);
+            resultDiv.innerHTML = formatApiResponse(result);
+            resultDiv.style.display = "block";
+          } catch (error) {
+            const errorMsg =
+              currentLang === "it"
+                ? `Si è verificato un errore: ${error.message}. Riprova più tardi.`
+                : `An error occurred: ${error.message}. Please try again later.`;
+            resultDiv.innerHTML = `<p>${errorMsg}</p>`;
+            resultDiv.style.display = "block";
+          } finally {
+            loader.style.display = "none";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
